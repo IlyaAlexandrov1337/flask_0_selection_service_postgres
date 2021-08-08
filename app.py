@@ -12,12 +12,6 @@ from sqlalchemy.sql.expression import func
 
 csrf = CSRFProtect(app)
 
-SECRET_KEY = '1a0b329df51147t0va111335d2acbfd8'
-app.config['SECRET_KEY'] = SECRET_KEY
-app.config["SQLALCHEMY_database_json_URI"] = os.environ.get("database_json_URL")
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
 
 days = {"mon": "Понедельник", "tue": "Вторник", "wed": "Среда", "thu": "Четверг", "fri": "Пятница", "sat": " Суббота",
         "sun": "Воскресенье"}

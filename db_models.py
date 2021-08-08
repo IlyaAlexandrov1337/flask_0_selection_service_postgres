@@ -1,20 +1,7 @@
-import os
-
-from flask_sqlalchemy import SQLAlchemy
+from app import app, db
 from flask_migrate import Migrate
-from flask import Flask
-from flask_wtf.csrf import CSRFProtect
 
-
-app = Flask(__name__)
-db = SQLAlchemy(app)
 migrate = Migrate(app, db)
-csrf = CSRFProtect(app)
-
-SECRET_KEY = '1a0b329df51147t0a111335d2acbfd8'
-app.config['SECRET_KEY'] = SECRET_KEY
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
 goals_to_teachers_table = db.Table('goals_to_teachers',
     db.Column('teacher_id', db.Integer, db.ForeignKey('teachers.id')),

@@ -13,7 +13,7 @@ days = {"mon": "Понедельник", "tue": "Вторник", "wed": "Сре
 
 
 goal_obj_dict = {}
-for t in open_json("database/teachers.json"):
+for t in open_json("database_json/teachers.json"):
     flag = False
     if Teacher.query.get(t['id']):
         continue
@@ -21,7 +21,7 @@ for t in open_json("database/teachers.json"):
                         price=t['price'], free=json.dumps(t['free']))
     for goal in t['goals']:
         if goal not in goal_obj_dict.keys():
-            goal_obj_dict[goal] = Goal(name=goal, description=open_json("database/goals.json")[goal])
+            goal_obj_dict[goal] = Goal(name=goal, description=open_json("database_json/goals.json")[goal])
             db.session.add(goal_obj_dict[goal])
         goal_obj_dict[goal].teacher.append(teach_obj)
     db.session.add(teach_obj)

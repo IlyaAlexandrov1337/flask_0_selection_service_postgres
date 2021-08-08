@@ -1,5 +1,4 @@
 import json
-import os
 import forms
 
 from db_models import Teacher, Goal, Booking, Request, app, db

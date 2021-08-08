@@ -1,15 +1,76 @@
 import json
+import os
 import forms
-from db_models import *
 
-from flask import render_template, request
+
+from flask import Flask, render_template, request, redirect
+from flask_wtf.csrf import CSRFProtect
 from json_operations import open_json
 from flask import Flask, render_template
 from sqlalchemy.sql.expression import func
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
+app = Flask(__name__)
+csrf = CSRFProtect(app)
+
+SECRET_KEY = '1a0b329df51147t0a111335d2acbfd8'
+app.config['SECRET_KEY'] = SECRET_KEY
+app.config["SQLALCHEMY_database_json_URI"] = os.environ.get("database_json_URL")
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 days = {"mon": "Понедельник", "tue": "Вторник", "wed": "Среда", "thu": "Четверг", "fri": "Пятница", "sat": " Суббота",
         "sun": "Воскресенье"}
+
+
+goals_to_teachers_table = db.Table('goals_to_teachers',
+    db.Column('teacher_id', db.Integer, db.ForeignKey('teachers.id')),
+    db.Column('goal_id', db.String, db.ForeignKey('goals.name'))
+)
+
+
+class Teacher(db.Model):
+    __tablename__ = 'teachers'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String, nullable=False)
+    about = db.Column(db.String, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
+    picture = db.Column(db.String, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    free = db.Column(db.JSON, nullable=False)
+    booking = db.relationship("Booking", back_populates="teacher")
+    goals = db.relationship("Goal", secondary=goals_to_teachers_table, back_populates="teacher")
+
+
+class Goal(db.Model):
+    __tablename__ = 'goals'
+    name = db.Column(db.String, nullable=False, primary_key=True)
+    description = db.Column(db.String, nullable=False)
+    teacher = db.relationship("Teacher", secondary=goals_to_teachers_table, back_populates="goals")
+
+
+class Booking(db.Model):
+    __tablename__ = 'bookings'
+    id = db.Column(db.Integer, primary_key=True)
+    day = db.Column(db.String, nullable=False)
+    time = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
+    phone = db.Column(db.String, nullable=False)
+    teacher = db.relationship("Teacher", back_populates="booking")
+    teacher_id = db.Column(db.Integer, db.ForeignKey("teachers.id"))
+
+
+class Request(db.Model):
+    __tablename__ = 'requests'
+    id = db.Column(db.Integer, primary_key=True)
+    goal = db.Column(db.String, nullable=False)
+    time = db.Column(db.String, nullable=False)
+    name = db.Column(db.String, nullable=False)
+    phone = db.Column(db.String, nullable=False)
 
 
 goal_obj_dict = {}
@@ -21,7 +82,7 @@ for t in open_json("database_json/teachers.json"):
                         price=t['price'], free=json.dumps(t['free']))
     for goal in t['goals']:
         if goal not in goal_obj_dict.keys():
-            goal_obj_dict[goal] = Goal(name=goal, description=open_json("database_json/goals.json")[goal])
+            goal_obj_dict[goal] = Goal(name=goal, description=open_json("database_json_json/goals.json")[goal])
             db.session.add(goal_obj_dict[goal])
         goal_obj_dict[goal].teacher.append(teach_obj)
     db.session.add(teach_obj)

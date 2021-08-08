@@ -77,7 +77,7 @@ class Request(db.Model):
     phone = db.Column(db.String, nullable=False)
 
 goal_obj_dict = {}
-for t in open_json("database_json_json/teachers.json"):
+for t in open_json("database_json/teachers.json"):
     flag = False
     if Teacher.query.get(t['id']):
         continue

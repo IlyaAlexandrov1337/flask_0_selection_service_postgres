@@ -16,7 +16,6 @@ csrf = CSRFProtect(app)
 
 SECRET_KEY = '1a0b329df51147t0a111335d2acbfd8'
 app.config['SECRET_KEY'] = SECRET_KEY
-app.config["SQLALCHEMY_database_json_URI"] = os.environ.get('DATABASE_URL')
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 

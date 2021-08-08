@@ -16,25 +16,6 @@ days = {"mon": "Понедельник", "tue": "Вторник", "wed": "Сре
         "sun": "Воскресенье"}
 
 
-goal_obj_dict = {}
-for t in open_json("database_json/teachers.json"):
-    flag = False
-    if Teacher.query.get(t['id']):
-        continue
-    teach_obj = Teacher(id=t['id'], name=t['name'], about=t['about'], rating=t['rating'], picture=t['picture'],
-                        price=t['price'], free=json.dumps(t['free']))
-    for goal in t['goals']:
-        if goal not in goal_obj_dict.keys():
-            goal_obj_dict[goal] = Goal(name=goal, description=open_json("database_json_json/goals.json")[goal])
-            db.session.add(goal_obj_dict[goal])
-        goal_obj_dict[goal].teacher.append(teach_obj)
-    db.session.add(teach_obj)
-    flag = True
-
-if flag:
-    db.session.commit()
-
-
 @app.errorhandler(500)
 def render_server_error(error):
     return f'<h1>Что-то не так, но мы все починим</h1><p>{error}</p>'
@@ -124,4 +105,23 @@ def booking_render(id, day, time):
 
 
 if __name__ == "__main__":
+        
+    goal_obj_dict = {}
+    for t in open_json("database_json/teachers.json"):
+        flag = False
+        if Teacher.query.get(t['id']):
+            continue
+        teach_obj = Teacher(id=t['id'], name=t['name'], about=t['about'], rating=t['rating'], picture=t['picture'],
+                            price=t['price'], free=json.dumps(t['free']))
+        for goal in t['goals']:
+            if goal not in goal_obj_dict.keys():
+                goal_obj_dict[goal] = Goal(name=goal, description=open_json("database_json_json/goals.json")[goal])
+                db.session.add(goal_obj_dict[goal])
+            goal_obj_dict[goal].teacher.append(teach_obj)
+        db.session.add(teach_obj)
+        flag = True
+
+    if flag:
+        db.session.commit()
+
     app.run()

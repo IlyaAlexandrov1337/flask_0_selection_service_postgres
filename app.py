@@ -5,7 +5,7 @@ import forms
 from random import sample, shuffle
 from flask import Flask, render_template, request, redirect
 from flask_wtf.csrf import CSRFProtect
-from json_operations import open_json, add_info
+from json_operations import open_json
 from flask import Flask, render_template
 from sqlalchemy.sql.expression import func
 from sqlalchemy.dialects.postgresql import JSON

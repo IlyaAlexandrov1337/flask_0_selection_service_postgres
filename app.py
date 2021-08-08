@@ -2,24 +2,22 @@ import json
 import os
 import forms
 
-from db_models import Teacher, Goal, Booking, Request
+from db_models import Teacher, Goal, Booking, Request, app, db
 from flask import Flask, render_template, request, redirect
 from flask_wtf.csrf import CSRFProtect
 from json_operations import open_json
 from flask import Flask, render_template
 from sqlalchemy.sql.expression import func
-from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+
 csrf = CSRFProtect(app)
 
-SECRET_KEY = '1a0b329df51147t0a111335d2acbfd8'
+SECRET_KEY = '1a0b329df51147t0va111335d2acbfd8'
 app.config['SECRET_KEY'] = SECRET_KEY
 app.config["SQLALCHEMY_database_json_URI"] = os.environ.get("database_json_URL")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-db = SQLAlchemy(app)
 
 days = {"mon": "Понедельник", "tue": "Вторник", "wed": "Среда", "thu": "Четверг", "fri": "Пятница", "sat": " Суббота",
         "sun": "Воскресенье"}

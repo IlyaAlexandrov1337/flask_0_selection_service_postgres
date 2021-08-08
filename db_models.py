@@ -1,7 +1,9 @@
-from app import app, db
-from flask_migrate import Migrate
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
-migrate = Migrate(app, db)
+
+app = Flask(__name__)
+db = SQLAlchemy(app)
 
 goals_to_teachers_table = db.Table('goals_to_teachers',
     db.Column('teacher_id', db.Integer, db.ForeignKey('teachers.id')),

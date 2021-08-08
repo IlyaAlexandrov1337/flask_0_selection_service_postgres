@@ -115,7 +115,7 @@ if __name__ == "__main__":
                             price=t['price'], free=json.dumps(t['free']))
         for goal in t['goals']:
             if goal not in goal_obj_dict.keys():
-                goal_obj_dict[goal] = Goal(name=goal, description=open_json("database_json_json/goals.json")[goal])
+                goal_obj_dict[goal] = Goal(name=goal, description=open_json("database_json/goals.json")[goal])
                 db.session.add(goal_obj_dict[goal])
             goal_obj_dict[goal].teacher.append(teach_obj)
         db.session.add(teach_obj)

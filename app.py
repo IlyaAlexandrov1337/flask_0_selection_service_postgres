@@ -56,8 +56,8 @@ def goal_render(goal):
     goal = Goal.query.filter(Goal.name == goal).first()
     if not goal:
             return redirect('/')
-    goal_teachers = Teacher.query.filter(Teacher.goals.any(Goal.name == goal)).order_by(Teacher.rating.desc()).all()
-    goal_descr = Goal.query.filter(Goal.name == goal).first().description
+    goal_teachers = Teacher.query.filter(Teacher.goals.any(Goal.name == goal.name)).order_by(Teacher.rating.desc()).all()
+    goal_descr = Goal.query.filter(Goal.name == goal.name).first().description
     return render_template('goal.html', teachers=goal_teachers, goal=goal_descr)
 
 

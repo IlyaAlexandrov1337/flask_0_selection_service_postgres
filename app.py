@@ -53,7 +53,9 @@ def all_render():
 
 @app.route("/goals/<goal>/")
 def goal_render(goal):
-    print(Teacher.query.first().goals[1].name)
+    goal = Goal.query.filter(Goal.name == goal).first()
+    if not goal:
+            return redirect('/')
     goal_teachers = Teacher.query.filter(Teacher.goals.any(Goal.name == goal)).order_by(Teacher.rating.desc()).all()
     goal_descr = Goal.query.filter(Goal.name == goal).first().description
     return render_template('goal.html', teachers=goal_teachers, goal=goal_descr)
